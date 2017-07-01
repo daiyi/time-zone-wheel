@@ -1,0 +1,117 @@
+$black: #222
+$white: #ccc
+
+html, body
+  width: 100%
+  height: 100%
+  margin: 0
+  padding: 0
+  color: $white
+  background: $black
+  font-family: monospace
+
+
+.page
+  height: 100vh
+  width: 100vw
+
+  width: 100%
+  height: 100%
+
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+.intro
+  color: darken($white, 20)
+
+
+.wheel-box
+  flex: 0 0 auto
+
+  width: 100%
+  height: auto
+  min-width: 500px
+  min-height: 500px
+  max-width: 800px
+  max-height: 800px
+  // border-radius: 300px
+  // border: 1px dashed lighten($black, 20)
+  margin: auto
+  position: relative
+
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  dominant-baseline: middle
+
+  .wheel
+    transition: all 0.2s linear
+
+    line
+      stroke-width: 1
+      stroke: darken($white, 20)
+
+    path
+      fill: rgba(0, 0, 0, 0.2)
+
+      &.awake-hours
+        fill: rgba(225, 225, 225, 0.3)
+
+      &.work-hours
+        fill: rgba(90, 0, 0, 0.4)
+
+      &.social-hours
+        fill: rgba(180, 204, 5, 0.3)
+
+
+
+    text
+      text-anchor: middle
+      fill: $white
+
+
+
+  .wheel-locations
+    transition: all 0.2s linear
+    text
+      // text-anchor: start
+      fill: $white
+
+
+  svg
+    position: absolute
+    top: 0
+    left: 0
+
+
+
+
+.locations
+  position: relative
+  width: 1px
+  height: 1px
+  // background: green
+  flex: 0 0 auto
+
+  .location
+    &:before
+      content: '— '
+
+    height: 13px
+    width: 1px
+    margin-top: -6px
+    display: block
+    white-space: nowrap
+    position: absolute
+
+h1
+  font-size: 1.5em
+  color: $white
+
+a, a:visited, a:hover
+  color: $white
+  text-decoration: none
+  border-bottom: 1px dotted $white
