@@ -10,10 +10,16 @@
 (defn get-rotation
   [hour]
   ; offset text rotation by 90 deg, because we want upright text to start from due east
-  (def theta (get-theta hour))
-  (+ (* (- theta (/ Math/PI 2))
-        (/ 180 Math/PI))
-     (if (> theta Math/PI) -180 0)))
+  ; TODO flip text depending on wheel-rotation
+  (let [theta (get-theta hour)]
+    (+ (* (- theta (/ Math/PI 2))
+          (/ 180 Math/PI))
+       (if (> theta Math/PI) -180 0))))
+
+(defn get-wheel-rotation
+  [hour]
+  (let [theta (get-theta hour)]
+    (* theta (/ 180 Math/PI))))
 
 (defn get-x
   [r hour]
@@ -46,8 +52,8 @@
 (defn handle-keys
   [e]
   (cond
-    (= (.-keyCode e) 37) (println "rotate left")
-    (= (.-keyCode e) 39) (println "rotate right")))
+    (= (.-keyCode e) 37) (re-frame/dispatch [:rotate-hour -1])
+    (= (.-keyCode e) 39) (re-frame/dispatch [:rotate-hour 1])))
 
 (defn sundial
   []
@@ -59,6 +65,7 @@
       (for [index (range 24)]
         (get-clock-hour index 115))]
     [:g.wheel-locations
+      {:transform (str "rotate(" (get-wheel-rotation @(re-frame/subscribe [:rotation])) " 0 0)")}
       (get-location-label 1 150 "potato friend")
       (get-location-label 6 150 "a birb")
       (get-location-label 20 150 "bloop")]])
@@ -72,13 +79,14 @@
 
 (defn main-panel
   []
-  (let [name (re-frame/subscribe [:name])]
+  (let [name (re-frame/subscribe [:name])
+        instructions (re-frame/subscribe [:instructions])]
     (set! (.-onkeydown js/document) #(handle-keys %))
     (fn []
       [:div.page
         [:div.intro
-          [:h1 "time zone wheel"]
-          [:p [:i "use arrow keys to spin the wheel of time"]]
+          [:h1 @name]
+          [:p [:i @instructions]]
           [:p "a more visual way of doing timezone conversions" [:br]
            "and mess around for a window when everyone is awake!"]
           [:p "by "

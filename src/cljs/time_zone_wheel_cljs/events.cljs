@@ -6,3 +6,9 @@
  :initialize-db
  (fn  [_ _]
    db/default-db))
+
+(re-frame/reg-event-db
+  :rotate-hour
+  (fn
+    [db [_ hour-change]]
+    (assoc db :rotation (+ hour-change (:rotation db)))))

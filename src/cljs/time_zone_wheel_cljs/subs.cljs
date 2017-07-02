@@ -6,3 +6,15 @@
  :name
  (fn [db]
    (:name db)))
+
+(re-frame/reg-sub
+ :instructions
+ (fn [db _]
+   (-> db
+     :instructions)))
+
+(re-frame/reg-sub
+  :rotation
+  (fn [db _]
+    (-> db
+      :rotation)))
