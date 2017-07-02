@@ -6,6 +6,26 @@
   [hour]
   (* hour 2 (/ Math/PI 24)))
 
+(defn svg-masks
+  [r1 r2]
+  [:defs
+    [:mask#donut
+      [:circle {:cx 0
+                :cy 0
+                :r r2
+                :stroke "white"
+                :stroke-width "100"}]]
+    [:mask#donut-hole
+      [:rect {:x -300
+              :y -300
+              :width 900
+              :height 900
+              :fill "white"}]
+      [:circle {:cx 0
+                :cy 0
+                :r r1
+                :fill "black"}]]])
+
 
 (defn get-rotation
   [hour]
@@ -14,7 +34,7 @@
   (let [theta (get-theta hour)]
     (+ (* (- theta (/ Math/PI 2))
           (/ 180 Math/PI))
-       (if (> theta Math/PI) -180 0))))
+       (if (>= theta Math/PI) -180 0))))
 
 (defn get-wheel-rotation
   [hour]
@@ -55,43 +75,63 @@
     (= (.-keyCode e) 37) (re-frame/dispatch [:rotate-hour -1])
     (= (.-keyCode e) 39) (re-frame/dispatch [:rotate-hour 1])))
 
+
+
+(defn wheel-slice
+  [r start end fill]
+  (let [x1 (get-x r (- start 0.5)) ; hours are inclusive. this highlights the hour text.
+        x2 (get-x r (+ end 0.5))
+        y1 (get-y r (- start 0.5))
+        y2 (get-y r (+ end 0.5))
+        largeArcFlag (if (> (- end start) 12) 1 0)]
+    [:path {:d (str "M " x1 " " y1 " A " r " " r " 0 " largeArcFlag " 1 " x2 " " y2 " L 0 0 Z")
+            :fill fill}]))
+
 (defn sundial
   []
   [:svg.clock {:viewBox "-300 -300 600 600" :preserveAspectRatio "xMidYMid meet"}
+    (svg-masks 80 140)
     ;; hour marks on the clock
     [:g.wheel
-      (for [index (range 24)]
-        (get-clock-tick index 130 15))
+      {:mask "url(#donut)"}
+      (wheel-slice 140 7 24 "rgba(225, 225, 225, 0.3)")
+      (wheel-slice 140 8 22 "rgba(180, 204, 5, 0.3)")
+      (wheel-slice 140 10 18 "rgba(90, 0, 0, 0.4)")
+      ; (for [index (range 24)]
+      ;   (get-clock-tick index 130 15))
       (for [index (range 24)]
         (get-clock-hour index 115))]
-    [:g.wheel-locations
-      {:transform (str "rotate(" (get-wheel-rotation @(re-frame/subscribe [:rotation])) " 0 0)")}
-      (get-location-label 1 150 "potato friend")
-      (get-location-label 6 150 "a birb")
-      (get-location-label 20 150 "bloop")]])
+    [:g.wheel-locations {
+                          ; :mask "url(#donut-hole)"
+                          :transform (str "rotate(" (get-wheel-rotation @(re-frame/subscribe [:rotation])) " 0 0)")}
+      (get-location-label 2  150 "daiyi!")
+      (get-clock-tick     2  130 15)
+      (get-location-label -7 150 "meimei & olas")
+      (get-clock-tick     -7 130 15)
+      (get-location-label 12 150 "new zealand")
+      (get-clock-tick     12 130 15)]])
 
-
-
-(defn wheel
+(defn intro
   []
-  [:div])
+  (let [name (re-frame/subscribe [:name])
+        instructions (re-frame/subscribe [:instructions])]
+    (fn []
+      [:div.intro
+        [:h1 @name]
+        [:p [:i @instructions]]
+        [:p "a more visual way of doing timezone conversions" [:br]
+         "and mess around for a window when everyone is awake!"]
+        [:p "by "
+         [:a {:href "https://twitter.com/daiyitastic"} "daiyi"]
+         " | "
+         [:a {:href "https://github.com/daiyi/time-zone-wheel-cljs"} "source"]]])))
 
 
 (defn main-panel
   []
-  (let [name (re-frame/subscribe [:name])
-        instructions (re-frame/subscribe [:instructions])]
-    (set! (.-onkeydown js/document) #(handle-keys %))
-    (fn []
-      [:div.page
-        [:div.intro
-          [:h1 @name]
-          [:p [:i @instructions]]
-          [:p "a more visual way of doing timezone conversions" [:br]
-           "and mess around for a window when everyone is awake!"]
-          [:p "by "
-           [:a {:href "http://daiyi.co"} "daiyi"]
-           " | "
-           [:a {:href "https://github.com/daiyi/time-zone-wheel-cljs"} "source"]]]
-        [:div.wheel-box
-          [sundial]]])))
+  (set! (.-onkeydown js/document) #(handle-keys %))
+  (fn []
+    [:div.page
+      [intro]
+      [:div.wheel-box
+        [sundial]]]))

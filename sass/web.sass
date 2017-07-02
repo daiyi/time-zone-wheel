@@ -54,17 +54,17 @@ html, body
       stroke-width: 1
       stroke: darken($white, 20)
 
-    path
-      fill: rgba(0, 0, 0, 0.2)
-
-      &.awake-hours
-        fill: rgba(225, 225, 225, 0.3)
-
-      &.work-hours
-        fill: rgba(90, 0, 0, 0.4)
-
-      &.social-hours
-        fill: rgba(180, 204, 5, 0.3)
+    // path
+    //   fill: rgba(0, 0, 0, 0.2)
+    //
+    //   &.awake-hours
+    //     fill: rgba(225, 225, 225, 0.3)
+    //
+    //   &.work-hours
+    //     fill: rgba(90, 0, 0, 0.4)
+    //
+    //   &.social-hours
+    //     fill: rgba(180, 204, 5, 0.3)
 
 
 
@@ -80,13 +80,14 @@ html, body
       // text-anchor: start
       fill: $white
 
+    line
+      stroke-width: 1
+      stroke: darken($white, 20)
 
   svg
     position: absolute
     top: 0
     left: 0
-
-
 
 
 .locations
@@ -97,9 +98,6 @@ html, body
   flex: 0 0 auto
 
   .location
-    &:before
-      content: '— '
-
     height: 13px
     width: 1px
     margin-top: -6px
@@ -115,3 +113,58 @@ a, a:visited, a:hover
   color: $white
   text-decoration: none
   border-bottom: 1px dotted $white
+
+
+
+
+
+input,
+select,
+button,
+textarea
+  margin: 0
+  border: 0
+  padding: 0
+  display: inline-block
+  vertical-align: middle
+  white-space: normal
+  background: none
+  line-height: 1
+
+  font-size: 13px
+  font-family: monospace
+
+
+form
+  .form-group
+    display: inline-block
+
+  input, textarea, select
+    background-color: #555
+    border: none
+    color: #FFFFFF
+
+  input
+    padding: 5px
+
+  select
+    padding: 3px
+
+
+  label
+    color: #AAAAAA
+    padding-top: 0px
+    padding-bottom: 0px
+
+
+  button.button-submit
+    background-color: #222222
+    border: solid 1px #999999
+    color: #CCCCCC
+    padding:  3px 10px
+    -moz-border-radius: 0px
+    -webkit-border-radius: 0px
+    border-radius: 0px
+
+    margin-top: 0px
+    margin-bottom: 0px
