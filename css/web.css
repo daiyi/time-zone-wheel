@@ -1,4 +1,3 @@
-@charset "UTF-8";
 html, body {
   width: 100%;
   height: 100%;
@@ -41,14 +40,6 @@ html, body {
     .wheel-box .wheel line {
       stroke-width: 1;
       stroke: #999999; }
-    .wheel-box .wheel path {
-      fill: rgba(0, 0, 0, 0.2); }
-      .wheel-box .wheel path.awake-hours {
-        fill: rgba(225, 225, 225, 0.3); }
-      .wheel-box .wheel path.work-hours {
-        fill: rgba(90, 0, 0, 0.4); }
-      .wheel-box .wheel path.social-hours {
-        fill: rgba(180, 204, 5, 0.3); }
     .wheel-box .wheel text {
       text-anchor: middle;
       fill: #cccccc; }
@@ -56,6 +47,9 @@ html, body {
     transition: all 0.2s linear; }
     .wheel-box .wheel-locations text {
       fill: #cccccc; }
+    .wheel-box .wheel-locations line {
+      stroke-width: 1;
+      stroke: #999999; }
   .wheel-box svg {
     position: absolute;
     top: 0;
@@ -73,8 +67,6 @@ html, body {
     display: block;
     white-space: nowrap;
     position: absolute; }
-    .locations .location:before {
-      content: "— "; }
 
 h1 {
   font-size: 1.5em;
@@ -84,3 +76,43 @@ a, a:visited, a:hover {
   color: #cccccc;
   text-decoration: none;
   border-bottom: 1px dotted #cccccc; }
+
+input,
+select,
+button,
+textarea {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: normal;
+  background: none;
+  line-height: 1;
+  font-size: 13px;
+  font-family: monospace; }
+
+form .form-group {
+  display: inline-block; }
+form input, form textarea, form select {
+  background-color: #555555;
+  border: none;
+  color: white; }
+form input {
+  padding: 5px; }
+form select {
+  padding: 3px; }
+form label {
+  color: #aaaaaa;
+  padding-top: 0px;
+  padding-bottom: 0px; }
+form button.button-submit {
+  background-color: #222222;
+  border: solid 1px #999999;
+  color: #cccccc;
+  padding: 3px 10px;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px; }
