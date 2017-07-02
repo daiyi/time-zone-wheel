@@ -111,6 +111,28 @@
       (get-location-label 12 150 "new zealand")
       (get-clock-tick     12 130 15)]])
 
+(defn add-location-form
+  []
+  [:form#form-add-location
+    [:div.form-group
+      [:label {:for "input-timezone-utc" :hidden "true"}
+        "timezone"]
+      [:select#input-timezone-utc {:type "select" :defaultValue 1}
+        [:option {:value -4} "UTC-4"]
+        [:option {:value 0} "UTC+0"]
+        [:option {:value 1} "UTC+1"]]]
+    [:div.form-group
+      [:label {:for "input-timezone-label" :hidden "true"}
+        "label"]
+      [:input#input-timezone-label {:placeholder "label" :type "text"}]]
+    [:div.form-group
+      [:button#button-add-location.button-submit
+        {:on-click
+          (fn [e]
+            (.preventDefault e)
+            (re-frame/dispatch [:add-location]))}
+        "add"]]])
+
 (defn intro
   []
   (let [name (re-frame/subscribe [:name])
@@ -134,4 +156,5 @@
     [:div.page
       [intro]
       [:div.wheel-box
-        [sundial]]]))
+        [sundial]]
+      [add-location-form]]))

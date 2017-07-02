@@ -38,13 +38,6 @@ html, body
   max-height: 800px
   // border-radius: 300px
   // border: 1px dashed lighten($black, 20)
-  margin: auto
-  position: relative
-
-  display: flex
-  flex-direction: column
-  justify-content: center
-  align-items: center
   dominant-baseline: middle
 
   .wheel
@@ -85,9 +78,10 @@ html, body
       stroke: darken($white, 20)
 
   svg
-    position: absolute
-    top: 0
-    left: 0
+    // wtf?
+    // position: absolute
+    // top: 0
+    // left: 0
 
 
 .locations
@@ -138,6 +132,7 @@ textarea
 form
   .form-group
     display: inline-block
+    margin: 0 5px
 
   input, textarea, select
     background-color: #555

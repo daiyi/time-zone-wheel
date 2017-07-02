@@ -12,3 +12,10 @@
   (fn
     [db [_ hour-change]]
     (assoc db :rotation (+ hour-change (:rotation db)))))
+
+(re-frame/reg-event-db
+  :add-location
+  (fn
+    [db [e]]
+    (println "adding location")
+    (assoc db :location "new location")))

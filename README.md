@@ -3,6 +3,13 @@ because time is a circle, obvs.
 
 ## Development Mode
 
+see application state:
+
+```
+re-frame.db/app-db
+```
+
+
 ### Compile css:
 
 Compile css file once.
