@@ -1,5 +1,6 @@
 (ns time-zone-wheel-cljs.views
-  (:require [re-frame.core :as re-frame]))
+  (:require [re-frame.core :as r]
+            [reagent.core :as reagent]))
 
 
 (defn get-theta
@@ -49,18 +50,18 @@
   [r hour]
   (* -1 r (Math/cos (get-theta hour))))
 
-(defn get-clock-tick
+(defn clock-tick
   [hour r l]
   ^{:key hour} [:line {:x1 (get-x r hour)
                        :x2 (get-x (+ r l) hour)
                        :y1 (get-y r hour)
                        :y2 (get-y (+ r l) hour)}])
 
-(defn get-clock-hour
+(defn clock-hour
  [hour r]
  ^{:key (+ 100 hour)} [:text {:x (get-x r hour) :y (get-y r hour)} hour])
 
-(defn get-location-label
+(defn location-label
   [hour r label]
   ^{:key (+ 200 hour)} [:text {:x (get-x r hour)
                                :y (get-y r hour)
@@ -72,9 +73,14 @@
 (defn handle-keys
   [e]
   (cond
-    (= (.-keyCode e) 37) (re-frame/dispatch [:rotate-hour -1])
-    (= (.-keyCode e) 39) (re-frame/dispatch [:rotate-hour 1])))
+    (= (.-keyCode e) 37) (r/dispatch [:rotate-hour -1])
+    (= (.-keyCode e) 39) (r/dispatch [:rotate-hour 1])))
 
+(defn label
+  [label-cursor]
+  (let [{:keys [name id timezone]} @label-cursor]
+    ^{:key id} [location-label timezone 150 name]))
+    ; ^{key (str id "_2")} [clock-tick     timezone 130 15]]))
 
 
 (defn wheel-slice
@@ -88,28 +94,26 @@
             :fill fill}]))
 
 (defn sundial
-  []
-  [:svg.clock {:viewBox "-300 -300 600 600" :preserveAspectRatio "xMidYMid meet"}
-    (svg-masks 80 140)
+  [app-state]
+  [:svg.clock {:viewBox "-300 -300 600 600"
+               :preserveAspectRatio "xMidYMid meet"}
+    [svg-masks 80 140]
     ;; hour marks on the clock
     [:g.wheel
       {:mask "url(#donut)"}
-      (wheel-slice 140 7 24 "rgba(225, 225, 225, 0.3)")
-      (wheel-slice 140 8 22 "rgba(180, 204, 5, 0.3)")
-      (wheel-slice 140 10 18 "rgba(90, 0, 0, 0.4)")
+      [wheel-slice 140 7 24 "rgba(225, 225, 225, 0.3)"]
+      [wheel-slice 140 8 22 "rgba(180, 204, 5, 0.3)"]
+      [wheel-slice 140 10 18 "rgba(90, 0, 0, 0.4)"]
       ; (for [index (range 24)]
-      ;   (get-clock-tick index 130 15))
+      ;   [clock-tick index 130 15]))
       (for [index (range 24)]
-        (get-clock-hour index 115))]
+        ^{:key (str index "_hour")}(clock-hour index 115))]  ;; ??? why can't I call this in square brackets without react yelling at me about keys?
     [:g.wheel-locations {
                           ; :mask "url(#donut-hole)"
-                          :transform (str "rotate(" (get-wheel-rotation @(re-frame/subscribe [:rotation])) " 0 0)")}
-      (get-location-label 2  150 "daiyi!")
-      (get-clock-tick     2  130 15)
-      (get-location-label -7 150 "meimei & olas")
-      (get-clock-tick     -7 130 15)
-      (get-location-label 12 150 "new zealand")
-      (get-clock-tick     12 130 15)]])
+                          :transform (str "rotate(" (get-wheel-rotation @(r/subscribe [:rotation])) " 0 0)")}
+      (for [i (range (count (:people @app-state)))]
+        (let [label-cursor (reagent/cursor app-state [:people i])]
+          ^{:key i} [label label-cursor]))]])
 
 (defn add-location-form
   []
@@ -130,13 +134,13 @@
         {:on-click
           (fn [e]
             (.preventDefault e)
-            (re-frame/dispatch [:add-location]))}
+            (r/dispatch [:add-location]))}
         "add"]]])
 
 (defn intro
   []
-  (let [name (re-frame/subscribe [:name])
-        instructions (re-frame/subscribe [:instructions])]
+  (let [name (r/subscribe [:name])
+        instructions (r/subscribe [:instructions])]
     (fn []
       [:div.intro
         [:h1 @name]
@@ -150,11 +154,11 @@
 
 
 (defn main-panel
-  []
+  [app-state]
   (set! (.-onkeydown js/document) #(handle-keys %))
   (fn []
     [:div.page
       [intro]
       [:div.wheel-box
-        [sundial]]
+        [sundial app-state]]
       [add-location-form]]))

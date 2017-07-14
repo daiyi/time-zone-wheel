@@ -22,8 +22,8 @@
   {:dev
    {:dependencies [[binaryage/devtools "0.8.2"]]
 
-    :plugins      [[lein-figwheel "0.5.9"]]
-    }}
+    :plugins      [[lein-figwheel "0.5.9"]]}}
+
 
   :cljsbuild
   {:builds
@@ -35,9 +35,11 @@
                     :output-dir           "resources/public/js/compiled/out"
                     :asset-path           "js/compiled/out"
                     :source-map-timestamp true
+                    ; :closure-defines      {"re_frame.trace.trace_enabled_QMARK_" true}
+                    ; :preloads             [devtools.preload, day8.re-frame.trace.preload]
                     :preloads             [devtools.preload]
-                    :external-config      {:devtools/config {:features-to-install :all}}
-                    }}
+                    :external-config      {:devtools/config {:features-to-install :all}}}}
+
 
     {:id           "min"
      :source-paths ["src/cljs"]
@@ -45,9 +47,4 @@
                     :output-to       "resources/public/js/compiled/app.js"
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}
-                    :pretty-print    false}}
-
-
-    ]}
-
-  )
+                    :pretty-print    false}}]})

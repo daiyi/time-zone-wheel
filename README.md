@@ -43,3 +43,8 @@ To compile clojurescript to javascript:
 lein clean
 lein cljsbuild once min
 ```
+
+## TODO
+
+- scrape some timezone data to parse time, ughh
+- maybe use a dropdown component, gross
