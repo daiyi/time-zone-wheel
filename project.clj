@@ -20,7 +20,8 @@
 
   :profiles
   {:dev
-   {:dependencies [[binaryage/devtools "0.8.2"]]
+   {:dependencies [[binaryage/devtools "0.8.2"]
+                   [day8.re-frame/trace "0.1.0"]]
 
     :plugins      [[lein-figwheel "0.5.9"]]}}
 
@@ -28,16 +29,15 @@
   :cljsbuild
   {:builds
    [{:id           "dev"
-     :source-paths ["src/cljs"]
+     :source-paths ["src/cljs" "checkouts/re-frame-trace/src"]
      :figwheel     {:on-jsload "time-zone-wheel-cljs.core/mount-root"}
      :compiler     {:main                 time-zone-wheel-cljs.core
                     :output-to            "resources/public/js/compiled/app.js"
                     :output-dir           "resources/public/js/compiled/out"
                     :asset-path           "js/compiled/out"
                     :source-map-timestamp true
-                    ; :closure-defines      {"re_frame.trace.trace_enabled_QMARK_" true}
-                    ; :preloads             [devtools.preload, day8.re-frame.trace.preload]
-                    :preloads             [devtools.preload]
+                    :closure-defines      {"re_frame.trace.trace_enabled_QMARK_" true}
+                    :preloads             [devtools.preload day8.re-frame.trace.preload]
                     :external-config      {:devtools/config {:features-to-install :all}}}}
 
 
