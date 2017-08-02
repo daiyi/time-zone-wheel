@@ -5,23 +5,22 @@
             [time-zone-wheel-cljs.subs]
             [time-zone-wheel-cljs.views :as views]
             [time-zone-wheel-cljs.config :as config]))
+            ; [re-frisk.core :refer [enable-re-frisk!]]))
 
-; (defonce app-state (r/atom {:timezones [{ :offset-name "UTC-8"
-;                                           :offset      -8
-;                                           :labels [{:id   "9289"
-;                                                     :name "meimei"}
-;                                                    {:id    "sldkjsldf"
-;                                                     :name  "olas"}]}]}))
+(defonce app-state (reagent/atom {:timezones
+                                   {:-7 {:labels #{"meimei" "olas"}}
+                                    :2  {:labels #{"jiejie"}}}}))
 
-(defonce app-state (reagent/atom {:people [{:name "meimei"
-                                            :id   "meimei"
-                                            :timezone -7}
-                                           {:name "daiyi!"
-                                            :id   "daiyi"
-                                            :timezone 2}
-                                           {:name "nyc"
-                                            :id   "nyc"
-                                            :timezone -4}]})) 
+
+; (defonce app-state (reagent/atom {:labels [{:name "meimei"
+;                                             :id   "meimei"
+;                                             :timezone -7}
+;                                            {:name "daiyi!"
+;                                             :id   "daiyi"
+;                                             :timezone 2}
+;                                            {:name "olas"
+;                                             :id   "olas"
+;                                             :timezone -7}]}))
 
 (defn dev-setup []
   (when config/debug?
@@ -35,5 +34,6 @@
 
 (defn ^:export init []
   (re-frame/dispatch-sync [:initialize-db])
+  ; (enable-re-frisk!)
   (dev-setup)
   (mount-root))

@@ -1,6 +1,7 @@
 (ns time-zone-wheel-cljs.views
   (:require [re-frame.core :as r]
-            [reagent.core :as reagent]))
+            [reagent.core :as reagent]
+            [clojure.string :as string]))
 
 
 (defn get-theta
@@ -76,11 +77,16 @@
     (= (.-keyCode e) 37) (r/dispatch [:rotate-hour -1])
     (= (.-keyCode e) 39) (r/dispatch [:rotate-hour 1])))
 
-(defn label
-  [label-cursor]
-  (let [{:keys [name id timezone]} @label-cursor]
-    ^{:key id} [location-label timezone 150 name]))
-    ; ^{key (str id "_2")} [clock-tick     timezone 130 15]]))
+(defn label [timezones offset]
+  ^{:key offset} [location-label
+                   offset
+                   150
+                   (string/join ", " (get-in timezones [(-> offset
+                                                          (- 11)
+                                                          (str)
+                                                          (keyword))
+                                                        :labels]))])
+  ; ^{key (str id "_2")} [clock-tick     timezone 130 15])
 
 
 (defn wheel-slice
@@ -102,8 +108,8 @@
     [:g.wheel
       {:mask "url(#donut)"}
       [wheel-slice 140 7 24 "rgba(225, 225, 225, 0.3)"]
-      [wheel-slice 140 8 22 "rgba(180, 204, 5, 0.3)"]
-      [wheel-slice 140 10 18 "rgba(90, 0, 0, 0.4)"]
+      [wheel-slice 140 8 22 "#4d3c67"]
+      [wheel-slice 140 10 18 "#1f7c81"]
       ; (for [index (range 24)]
       ;   [clock-tick index 130 15]))
       (for [index (range 24)]
@@ -111,9 +117,9 @@
     [:g.wheel-locations {
                           ; :mask "url(#donut-hole)"
                           :transform (str "rotate(" (get-wheel-rotation @(r/subscribe [:rotation])) " 0 0)")}
-      (for [i (range (count (:people @app-state)))]
-        (let [label-cursor (reagent/cursor app-state [:people i])]
-          ^{:key i} [label label-cursor]))]])
+      (doall
+        (for [i (range 24)]
+          ^{:key (str "label-" i)} [label (:timezones @app-state) i]))]])
 
 (defn add-location-form
   []
