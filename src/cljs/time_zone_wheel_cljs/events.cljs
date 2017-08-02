@@ -16,6 +16,7 @@
 (re-frame/reg-event-db
   :add-location
   (fn
-    [db [e]]
-    (println "adding location")
-    (assoc db :location "new location")))
+    [db [_ label offset]]
+    (if (pos? (count label))
+      (update-in db [:labels (keyword offset)] (fnil conj #{}) label)
+      db)))

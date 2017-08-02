@@ -14,4 +14,6 @@
 (def default-db
   {:name "time zone wheel"
    :instructions "use arrow keys to spin the wheel of time"
-   :rotation (get-hour)})
+   :rotation (get-hour)
+   :labels {:-7 #{"meimei" "olas"}
+            :2  #{"jiejie"}}})

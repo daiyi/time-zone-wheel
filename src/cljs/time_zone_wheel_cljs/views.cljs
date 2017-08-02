@@ -77,16 +77,15 @@
     (= (.-keyCode e) 37) (r/dispatch [:rotate-hour -1])
     (= (.-keyCode e) 39) (r/dispatch [:rotate-hour 1])))
 
-(defn label [timezones offset]
+(defn label [labels offset]
   ^{:key offset} [location-label
                    offset
                    150
-                   (string/join ", " (get-in timezones [(-> offset
-                                                          (- 11)
-                                                          (str)
-                                                          (keyword))
-                                                        :labels]))])
-  ; ^{key (str id "_2")} [clock-tick     timezone 130 15])
+                   (string/join ", " (get labels (-> offset
+                                                   (- 11)
+                                                   (str)
+                                                   (keyword))))])
+    ; ^{key (str offset "_2")} [clock-tick     offset 130 15])
 
 
 (defn wheel-slice
@@ -99,8 +98,7 @@
     [:path {:d (str "M " x1 " " y1 " A " r " " r " 0 " largeArcFlag " 1 " x2 " " y2 " L 0 0 Z")
             :fill fill}]))
 
-(defn sundial
-  [app-state]
+(defn sundial []
   [:svg.clock {:viewBox "-300 -300 600 600"
                :preserveAspectRatio "xMidYMid meet"}
     [svg-masks 80 140]
@@ -119,28 +117,28 @@
                           :transform (str "rotate(" (get-wheel-rotation @(r/subscribe [:rotation])) " 0 0)")}
       (doall
         (for [i (range 24)]
-          ^{:key (str "label-" i)} [label (:timezones @app-state) i]))]])
+          ^{:key (str "label-" i)} [label @(r/subscribe [:labels]) i]))]])
 
-(defn add-location-form
-  []
+(defn location-form []
   [:form#form-add-location
     [:div.form-group
       [:label {:for "input-timezone-utc" :hidden "true"}
         "timezone"]
-      [:select#input-timezone-utc {:type "select" :defaultValue 1}
+      [:select#input-timezone-utc {:name "offset" :type "select" :defaultValue 1}
         [:option {:value -4} "UTC-4"]
         [:option {:value 0} "UTC+0"]
         [:option {:value 1} "UTC+1"]]]
     [:div.form-group
       [:label {:for "input-timezone-label" :hidden "true"}
         "label"]
-      [:input#input-timezone-label {:placeholder "label" :type "text"}]]
+      [:input#input-timezone-label {:name "label" :placeholder "label" :type "text"}]]
     [:div.form-group
       [:button#button-add-location.button-submit
         {:on-click
-          (fn [e]
-            (.preventDefault e)
-            (r/dispatch [:add-location]))}
+          (fn [event]
+            (.preventDefault event)
+            (r/dispatch [:add-location (.. event -target -form -label -value)
+                                       (.. event -target -form -offset -value)]))}
         "add"]]])
 
 (defn intro
@@ -159,12 +157,11 @@
          [:a {:href "https://github.com/daiyi/time-zone-wheel-cljs"} "source"]]])))
 
 
-(defn main-panel
-  [app-state]
+(defn main-panel []
   (set! (.-onkeydown js/document) #(handle-keys %))
   (fn []
     [:div.page
       [intro]
       [:div.wheel-box
-        [sundial app-state]]
-      [add-location-form]]))
+        [sundial]]
+      [location-form]]))

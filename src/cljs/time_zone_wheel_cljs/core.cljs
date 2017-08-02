@@ -7,21 +7,6 @@
             [time-zone-wheel-cljs.config :as config]))
             ; [re-frisk.core :refer [enable-re-frisk!]]))
 
-(defonce app-state (reagent/atom {:timezones
-                                   {:-7 {:labels #{"meimei" "olas"}}
-                                    :2  {:labels #{"jiejie"}}}}))
-
-
-; (defonce app-state (reagent/atom {:labels [{:name "meimei"
-;                                             :id   "meimei"
-;                                             :timezone -7}
-;                                            {:name "daiyi!"
-;                                             :id   "daiyi"
-;                                             :timezone 2}
-;                                            {:name "olas"
-;                                             :id   "olas"
-;                                             :timezone -7}]}))
-
 (defn dev-setup []
   (when config/debug?
     (enable-console-print!)
@@ -29,7 +14,7 @@
 
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
-  (reagent/render [views/main-panel app-state]
+  (reagent/render [views/main-panel]
                   (.getElementById js/document "app")))
 
 (defn ^:export init []

@@ -18,3 +18,9 @@
   (fn [db _]
     (-> db
       :rotation)))
+
+(re-frame/reg-sub
+  :labels
+  (fn [db _]
+    (-> db
+      :labels)))
