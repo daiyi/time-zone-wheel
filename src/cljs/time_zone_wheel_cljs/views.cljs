@@ -31,7 +31,6 @@
                 :r r1
                 :fill "black"}]]])
 
-
 (defn get-rotation
   [hour]
   ; offset text rotation by 90 deg, because we want upright text to start from due east
@@ -125,12 +124,14 @@
 (defn location-form []
   [:form#form-add-location
     [:div.form-group
-      [:label {:for "input-timezone-utc" :hidden "true"}
-        "timezone"]
-      [:select#input-timezone-utc {:name "offset" :type "select" :defaultValue 1}
-        [:option {:value -4} "UTC-4"]
-        [:option {:value 0} "UTC+0"]
-        [:option {:value 1} "UTC+1"]]]
+      [:label {:for "input-timezone-location" :hidden "true"}
+        "location"]
+      [:input#input-timezone-location {:list "locations"
+                                       :name "location"
+                                       :placeholder "Europe/Berlin"
+                                       :type "text"}]
+      [:datalist#locations
+        (map (fn [location] ^{:key location} [:option {:value location}]) tz/names)]]
     [:div.form-group
       [:label {:for "input-timezone-label" :hidden "true"}
         "label"]
@@ -141,7 +142,7 @@
           (fn [event]
             (.preventDefault event)
             (r/dispatch [:add-location (.. event -target -form -label -value)
-                                       (.. event -target -form -offset -value)]))}
+                                       (.. event -target -form -location -value)]))}
         "add"]]])
 
 (defn intro
