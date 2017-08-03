@@ -1,7 +1,10 @@
 (ns time-zone-wheel-cljs.views
   (:require [re-frame.core :as r]
             [reagent.core :as reagent]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [cljsjs.moment]
+            [cljsjs.moment-timezone]
+            [time-zone-wheel-cljs.timezone :as tz]))
 
 
 (defn get-theta
@@ -111,7 +114,7 @@
       ; (for [index (range 24)]
       ;   [clock-tick index 130 15]))
       (for [index (range 24)]
-        ^{:key (str index "_hour")}(clock-hour index 115))]  ;; ??? why can't I call this in square brackets without react yelling at me about keys?
+        ^{:key (str index "_hour")} [clock-hour index 115])]
     [:g.wheel-locations {
                           ; :mask "url(#donut-hole)"
                           :transform (str "rotate(" (get-wheel-rotation @(r/subscribe [:rotation])) " 0 0)")}

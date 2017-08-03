@@ -2,7 +2,9 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.854"]
                  [reagent "0.7.0"]
-                 [re-frame "0.9.4"]]
+                 [re-frame "0.9.4"]
+                 [cljsjs/moment "2.17.1-1"]
+                 [cljsjs/moment-timezone "0.5.11-0"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-sassy "1.0.8"]]
