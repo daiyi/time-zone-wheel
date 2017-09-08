@@ -5,6 +5,6 @@
   {:name "time zone wheel"
    :instructions "use arrow keys to spin the wheel of time"
    ;; TODO I just noticed the clock isn't rotated properly
-   :rotation (int (js->clj (.. (js/moment.) (format "H"))))
    :labels {:-7 #{"meimei" "olas"}
             :2  #{"jiejie"}}})
+   :rotation (- 24 (int (.. (js/moment.) (format "H"))))
