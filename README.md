@@ -46,8 +46,7 @@ lein cljsbuild once min
 
 ## TODO
 
-- scrape some timezone data to parse time, ughh
-- maybe use a dropdown component, gross
+fix this build trololol
 
 ## Deploying to gh-pages
 
