@@ -48,3 +48,11 @@ lein cljsbuild once min
 
 - scrape some timezone data to parse time, ughh
 - maybe use a dropdown component, gross
+
+## Deploying to gh-pages
+
+```
+git subtree push --prefix resources/public origin gh-pages
+```
+
+(emergency escape hatch: `git push origin `git subtree split --prefix resources/public master`:gh-pages --force`)

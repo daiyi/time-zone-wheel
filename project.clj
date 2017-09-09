@@ -47,6 +47,6 @@
      :source-paths ["src/cljs"]
      :compiler     {:main            time-zone-wheel-cljs.core
                     :output-to       "resources/public/js/compiled/app.js"
-                    :optimizations   :whitespace
+                    :optimizations   :whitespace ;; uhh todo, externs
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}]})
