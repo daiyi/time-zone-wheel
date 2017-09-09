@@ -43,7 +43,8 @@
 (defn get-wheel-rotation
   [hour]
   (let [theta (get-theta hour)]
-    (* theta (/ 180 Math/PI))))
+    (+ (* (- theta (/ Math/PI 2))
+          (/ 180 Math/PI)))))
 
 (defn get-x
   [r hour]
@@ -84,7 +85,7 @@
                    offset
                    150
                    (string/join ", " (get labels (-> offset
-                                                   (- 11)
+                                                   (- 11) ;; TODO
                                                    (str)
                                                    (keyword))))])
     ; ^{key (str offset "_2")} [clock-tick     offset 130 15])

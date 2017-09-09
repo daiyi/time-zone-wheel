@@ -1,6 +1,7 @@
 (ns time-zone-wheel-cljs.events
   (:require [re-frame.core :as re-frame]
-            [time-zone-wheel-cljs.db :as db]))
+            [time-zone-wheel-cljs.db :as db]
+            [time-zone-wheel-cljs.timezone :as tz]))
 
 (re-frame/reg-event-db
  :initialize-db
@@ -20,14 +21,7 @@
     ;; moment.tz("America/Los_Angeles").format("ZZ")
     ;; TODO don't allow locations that aren't on the location list
     (if (not-any? clojure.string/blank? [label location])
-      (update-in db [:labels (-> js/moment.
-                               (.tz location)
-                               (.format "ZZ")
-                               (.slice 0 3)
-                               (int)
-                               (js->clj)
-                               (str)
-                               (keyword))]
-                    (fnil conj #{})
+      (update-in db [:labels (tz/loc->keyword location)]
+                    (fnil conj [])
                     label)
       db)))
