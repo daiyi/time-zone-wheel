@@ -50,13 +50,17 @@ html, body {
   width: 1px;
   height: 1px;
   flex: 0 0 auto; }
-  .locations .location {
-    height: 13px;
-    width: 1px;
-    margin-top: -6px;
-    display: block;
-    white-space: nowrap;
-    position: absolute; }
+
+.location-labels .location-label {
+  height: 13px;
+  width: 1px;
+  margin-top: -6px;
+  display: block;
+  white-space: nowrap;
+  position: absolute;
+  cursor: pointer; }
+  .location-labels .location-label:hover {
+    text-decoration: line-through; }
 
 h1 {
   font-size: 1.5em;
