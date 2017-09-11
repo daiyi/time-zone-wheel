@@ -65,31 +65,27 @@
  [hour r]
  ^{:key (+ 100 hour)} [:text {:x (get-x r hour) :y (get-y r hour)} hour])
 
-(defn location-label
-  [hour r label]
-  ^{:key (+ 200 hour)} [:text {:x (get-x r hour)
-                               :y (get-y r hour)
-                               :class "location"
-                               :transform (str "rotate(" (get-rotation hour) " " (get-x r hour) " " (get-y r hour) ")")
-                               :text-anchor (if (> Math/PI (get-theta hour)) "start" "end")}
-                              label])
+(defn location-labels
+  [hour r labels]
+  [:text {:x (get-x r hour)
+          :y (get-y r hour)
+          :class "location-labels"
+          :transform (str "rotate(" (get-rotation hour) " " (get-x r hour) " " (get-y r hour) ")")
+          :text-anchor (if (> Math/PI (get-theta hour)) "start" "end")}
+      (map-indexed
+        (fn [i label]
+          [:tspan {:key i
+                   :class "location-label"
+                   :on-click #(js/console.log (r/dispatch [:remove-label label hour]))
+                   :dx 10}
+            label])
+        labels)])
 
 (defn handle-keys
   [e]
   (cond
     (= (.-keyCode e) 37) (r/dispatch [:rotate-hour -1])
     (= (.-keyCode e) 39) (r/dispatch [:rotate-hour 1])))
-
-(defn label [labels offset]
-  ^{:key offset} [location-label
-                   offset
-                   150
-                   (string/join ", " (get labels (-> offset
-                                                   (- 11) ;; TODO
-                                                   (str)
-                                                   (keyword))))])
-    ; ^{key (str offset "_2")} [clock-tick     offset 130 15])
-
 
 (defn wheel-slice
   [r start end fill]
@@ -119,8 +115,12 @@
                           ; :mask "url(#donut-hole)"
                           :transform (str "rotate(" (get-wheel-rotation @(r/subscribe [:rotation])) " 0 0)")}
       (doall
-        (for [i (range 24)]
-          ^{:key (str "label-" i)} [label @(r/subscribe [:labels]) i]))]])
+        (for [offset (range 24)]
+          ^{:key offset} [location-labels
+                           (- offset 11)
+                           150
+                           (get @(r/subscribe [:labels])
+                                (tz/hour->keyword (- offset 11)))]))]])
 
 (defn location-form []
   [:form#form-add-location

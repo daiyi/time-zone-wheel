@@ -2,9 +2,10 @@
   (:require [cljsjs.moment]
             [time-zone-wheel-cljs.timezone :as tz]))
 
-(def default-labels {(tz/loc->keyword "America/Los_Angeles") ["meimei" "olas"]
-                     (tz/loc->keyword "Europe/Berlin") ["jiejie"]
-                     (tz/loc->keyword (tz/user-loc)) ["you, right now."]})
+(def default-labels {(tz/loc->keyword "America/Los_Angeles") #{"LAX"}
+                     (tz/loc->keyword "America/Bogota") #{"Medellín"}
+                     (tz/loc->keyword "Europe/Berlin") #{"Berlin"}
+                     (tz/loc->keyword (tz/user-loc)) #{"you \\o/"}})
 
 (def default-db
   {:name "time zone wheel"

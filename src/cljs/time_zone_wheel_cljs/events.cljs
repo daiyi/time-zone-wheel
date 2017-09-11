@@ -25,3 +25,11 @@
                     (fnil conj [])
                     label)
       db)))
+
+(re-frame/reg-event-db
+  :remove-label
+  (fn
+    [db [_ label hour]]
+    (update-in db [:labels (tz/hour->keyword hour)]
+                  disj
+                  label)))
